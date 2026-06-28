@@ -1,0 +1,1357 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kocokan Arisan Piala Dunia 2026 - Roda Interaktif</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for World Cup 2026 Modern Aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at center, #0F0C20 0%, #06020F 100%);
+        }
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.6);
+        }
+        /* Glowing neon states */
+        .neon-glow-purple {
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+        }
+        .neon-border-active {
+            border-color: #a855f7;
+            animation: pulse-border 1.5s infinite alternate;
+        }
+        @keyframes pulse-border {
+            0% { border-color: rgba(168, 85, 247, 0.4); box-shadow: 0 0 5px rgba(168, 85, 247, 0.2); }
+            100% { border-color: rgba(168, 85, 247, 1); box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); }
+        }
+        /* Pulsing action buttons */
+        @keyframes pulse-gold {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.4)); }
+            50% { transform: scale(1.03); filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.7)); }
+        }
+        .pulse-gold-btn {
+            animation: pulse-gold 2s infinite;
+        }
+        @keyframes pulse-green {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.7)); }
+        }
+        .pulse-green-btn {
+            animation: pulse-green 2s infinite;
+        }
+        /* Modal Scale Entrance */
+        .modal-active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+        .modal-active > div {
+            transform: scale(1) !important;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen pb-12 overflow-x-hidden">
+
+    <!-- Canvas for Confetti -->
+    <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-[60] w-full h-full"></canvas>
+
+    <!-- Header Section with World Cup 2026 Neon Theme -->
+    <header class="relative overflow-hidden py-6 mb-6 border-b border-purple-500/20 bg-slate-950/60 backdrop-blur-md">
+        <!-- Stadium pitch line visuals on background -->
+        <div class="absolute inset-0 opacity-5 pointer-events-none">
+            <div class="absolute inset-x-0 top-1/2 h-0.5 bg-purple-500"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full border-2 border-purple-500"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold uppercase tracking-wider mb-2">
+                <i class="fa-solid fa-trophy text-yellow-500 animate-bounce"></i> World Cup 2026 Arisan Board
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold font-outfit tracking-tight bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-300 bg-clip-text text-transparent">
+                KOCOKAN ARISAN PIALA DUNIA 2026
+            </h1>
+            <p class="text-slate-400 text-xs md:text-sm mt-1 max-w-xl mx-auto">
+                Sistem Kocokan Adil: Pilih nama peserta terlebih dahulu, lalu putar Roda Negara untuk mendapatkan tim mereka!
+            </p>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="max-w-6xl mx-auto px-4 mb-6">
+        <div class="flex p-1 bg-slate-950/80 rounded-xl border border-slate-800 max-w-sm mx-auto">
+            <button onclick="switchTab('tab-kocok')" id="btn-tab-kocok" class="flex-1 py-2 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 bg-purple-600 text-white">
+                <i class="fa-solid fa-circle-play"></i> Arena Utama
+            </button>
+            <button onclick="switchTab('tab-data')" id="btn-tab-data" class="flex-1 py-2 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-user-gear"></i> Set Nama & Tim
+            </button>
+            <button onclick="switchTab('tab-hasil')" id="btn-tab-hasil" class="flex-1 py-2 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200">
+                <i class="fa-solid fa-square-poll-horizontal"></i> Hasil Akhir
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4">
+
+        <!-- 1. ARENA UTAMA (TAB KOCOK) -->
+        <section id="tab-kocok" class="space-y-6">
+            
+            <!-- Step Indicators / Progress Status -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="md:col-span-3 bg-slate-900/60 border border-slate-800/80 p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 backdrop-blur-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg font-bold font-outfit" id="step-number-badge">
+                            1
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Langkah Saat Ini</span>
+                            <h4 id="step-instruction-text" class="text-sm md:text-base font-extrabold text-white">Kocok Nama Peserta Terlebih Dahulu</h4>
+                        </div>
+                    </div>
+                    <!-- Audio Control Toggle & Reset -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="toggleSound()" id="sound-btn" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-purple-400 border border-purple-500/20 transition-all" title="Aktifkan/Matikan Suara">
+                            <i id="sound-icon" class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <button onclick="resetArisan()" class="p-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-xs text-red-400 border border-red-500/20 transition flex items-center gap-1.5 font-bold">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> Reset Kocokan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-2xl flex items-center justify-between backdrop-blur-sm">
+                    <div>
+                        <span class="text-xs text-slate-400 font-semibold uppercase block">Sisa Terundi</span>
+                        <span id="stat-sisa-tim" class="text-2xl font-black font-outfit text-yellow-400">32 / 32</span>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-flag"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Step Drawing Board with Interactive Lucky Wheel -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                
+                <!-- Left Section: 5 Cols for Name Drawing Card -->
+                <div class="lg:col-span-5 flex flex-col justify-between bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-sm relative overflow-hidden min-h-[420px]">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+                    <!-- Stage Info -->
+                    <div class="flex justify-between items-center z-10 mb-4">
+                        <span id="badge-langkah-nama" class="text-xs font-bold text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span> Langkah 1
+                        </span>
+                        <span class="text-xs text-slate-400 font-medium">Kocokan Nama</span>
+                    </div>
+
+                    <!-- Name Display Center Stage -->
+                    <div class="my-auto text-center space-y-4 z-10">
+                        <h3 class="text-xs text-slate-400 font-bold uppercase tracking-widest">Peserta Terpilih</h3>
+                        
+                        <!-- Main Name Billboard Box -->
+                        <div id="box-display-nama" class="h-32 flex flex-col items-center justify-center bg-slate-950/80 rounded-2xl border-2 border-slate-800 p-4 relative shadow-2xl transition-all duration-300">
+                            <div class="absolute inset-0 bg-gradient-to-t from-purple-500/5 to-transparent pointer-events-none"></div>
+                            <div id="display-nama" class="text-2xl md:text-3xl font-black font-outfit text-slate-300 tracking-wide text-center uppercase break-all">
+                                SIAP DIKOCOK
+                            </div>
+                        </div>
+
+                        <!-- Status Alert Mini Banner -->
+                        <div id="box-instruksi-nama" class="text-xs text-purple-300 bg-purple-500/5 border border-purple-500/10 py-2 px-3 rounded-xl inline-block max-w-full">
+                            Tekan tombol di bawah untuk menentukan nama peserta!
+                        </div>
+                    </div>
+
+                    <!-- Action Controls for Step 1 -->
+                    <div class="z-10 mt-6 pt-4 border-t border-slate-800/80">
+                        <button onclick="kocokNamaSaja()" id="btn-kocok-nama" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold font-outfit tracking-wider text-base transition-all duration-200 shadow-lg shadow-purple-500/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-dice text-lg animate-spin"></i> KOCOK NAMA PESERTA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Center/Right Section: 7 Cols for the Lucky Wheel & Pointer -->
+                <div class="lg:col-span-7 bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-sm flex flex-col items-center justify-between min-h-[480px] relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
+
+                    <!-- Stage Info -->
+                    <div class="w-full flex justify-between items-center mb-4 z-10">
+                        <span id="badge-langkah-tim" class="text-xs font-bold text-slate-500 bg-slate-800 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            Langkah 2
+                        </span>
+                        <span class="text-xs text-slate-400 font-medium">Roda Negara 2026</span>
+                    </div>
+
+                    <!-- Dynamic Spinning Wheel Container -->
+                    <div class="relative flex flex-col items-center justify-center my-auto py-2">
+                        
+                        <!-- Wheel Pointer Needle at 12 O'Clock -->
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center">
+                            <div class="w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-t-[28px] border-t-yellow-400 drop-shadow-[0_0_10px_rgba(234,179,8,0.8)] filter"></div>
+                            <div class="w-3 h-3 rounded-full bg-white -mt-5 border-2 border-slate-950 shadow"></div>
+                        </div>
+
+                        <!-- Canvas Drawing Element -->
+                        <div class="rounded-full overflow-hidden p-2 bg-gradient-to-tr from-slate-950 via-slate-800 to-slate-950 border-4 border-slate-800/60 shadow-2xl relative" id="wheel-canvas-container">
+                            <div class="absolute inset-2 rounded-full border border-white/5 pointer-events-none z-10"></div>
+                            <canvas id="lucky-wheel" width="340" height="340" class="w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] transition-transform duration-75"></canvas>
+                        </div>
+
+                        <!-- Central Cap Lock of the Wheel -->
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-gradient-to-tr from-slate-950 to-slate-900 border-4 border-slate-700 shadow-xl flex items-center justify-center z-20">
+                            <span class="text-xs">⚽</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls for Step 2 -->
+                    <div class="w-full z-10 mt-6 pt-4 border-t border-slate-800/80">
+                        <button onclick="putarRodaNegara()" id="btn-putar-roda" disabled class="w-full py-4 px-6 rounded-2xl bg-slate-800 text-slate-500 font-extrabold font-outfit tracking-wider text-base transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed">
+                            <i class="fa-solid fa-circle-notch"></i> PUTAR RODA NEGARA
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity List / Live Feed -->
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <h3 class="text-lg font-bold font-outfit text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-history text-purple-400"></i> Aktivitas Hasil Kocokan Terbaru
+                    </h3>
+                    <div class="relative w-full sm:w-64">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500 text-xs">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="recent-search" oninput="filterRecentFeed()" placeholder="Cari nama peserta..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-2 pl-9 pr-4 text-xs text-slate-300 placeholder-slate-500 focus:outline-none focus:border-purple-500/50">
+                    </div>
+                </div>
+
+                <div id="recent-feed-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <!-- Dynamic Items Added by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. DATA CONFIGURATION (TAB DATA) -->
+        <section id="tab-data" class="hidden space-y-6">
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold font-outfit text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-purple-400"></i> Pengaturan Peserta & Negara
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Gunakan format `Nama : Jumlah_Team` untuk mengatur jatah kuota tim setiap pemain.</p>
+                    </div>
+                    <button onclick="restoreDefaults()" class="py-2 px-3 text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl transition flex items-center gap-1 text-slate-300 font-semibold self-start">
+                        <i class="fa-solid fa-rotate"></i> Gunakan Data Default (32 Tim)
+                    </button>
+                </div>
+
+                <!-- Input Splitting Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Participants Setup -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                                <i class="fa-solid fa-users text-purple-400"></i> Daftar Nama & Jatah Tim (Format: `Nama : Kuota`)
+                            </label>
+                            <span id="label-count-peserta" class="text-xs font-bold bg-purple-500/10 text-purple-300 px-2 py-0.5 rounded-md">32 Slot</span>
+                        </div>
+                        <textarea id="input-peserta" rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-purple-500/50 tracking-wide leading-relaxed" oninput="updateCounts()"></textarea>
+                    </div>
+
+                    <!-- Teams Setup -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                                <i class="fa-solid fa-flag text-yellow-400"></i> Daftar Tim Negara (Satu Tim per Baris)
+                            </label>
+                            <span id="label-count-tim" class="text-xs font-bold bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-md">32 Negara</span>
+                        </div>
+                        <textarea id="input-tim" rows="12" class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm font-mono text-slate-200 focus:outline-none focus:ring-1 focus:ring-yellow-500/50 tracking-wide leading-relaxed" oninput="updateCounts()"></textarea>
+                    </div>
+                </div>
+
+                <!-- Save Action / Status warnings -->
+                <div class="mt-6 pt-6 border-t border-slate-800/80 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div id="data-match-warning" class="text-xs font-semibold text-yellow-400 flex items-center gap-2 bg-yellow-500/10 px-4 py-2.5 rounded-xl border border-yellow-500/20">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Harap samakan total akumulasi kuota peserta dan jumlah tim agar pas 32!
+                    </div>
+                    <button onclick="simpanPengaturan()" class="w-full md:w-auto py-3 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold font-outfit rounded-xl transition shadow-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Data Baru
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ALL RESULTS DISPLAY (TAB HASIL) -->
+        <section id="tab-hasil" class="hidden space-y-6">
+            <div class="bg-slate-900/40 border border-slate-800/80 rounded-3xl p-6 backdrop-blur-sm">
+                <!-- Action Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-slate-800">
+                    <div>
+                        <h2 class="text-xl font-bold font-outfit text-slate-100 flex items-center gap-2">
+                            <i class="fa-solid fa-square-poll-horizontal text-purple-400"></i> Rekapitulasi Hasil Undian Resmi
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Salin atau unduh daftar lengkap hasil kocokan arisan untuk dibagikan ke WhatsApp grup!</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="copyToClipboard()" class="py-2.5 px-4 text-xs font-bold bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 text-purple-300 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-copy"></i> Salin Semua
+                        </button>
+                        <button onclick="downloadResultsText()" class="py-2.5 px-4 text-xs font-bold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-arrow-down"></i> Unduh File (.TXT)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filters & Search -->
+                <div class="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6">
+                    <div class="relative w-full sm:w-80">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500 text-sm">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="final-results-search" oninput="filterFinalResults()" placeholder="Cari nama peserta atau tim..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-2 pl-9 pr-4 text-sm text-slate-300 placeholder-slate-500 focus:outline-none focus:border-purple-500/50">
+                    </div>
+                    <div class="text-xs text-slate-400 font-medium">
+                        Tercocokkan: <span id="final-results-count" class="font-extrabold text-purple-400">0</span> dari total <span id="final-total-count" class="font-bold">32</span> data
+                    </div>
+                </div>
+
+                <!-- Final Table Grid -->
+                <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Loaded dynamically via JS -->
+                    <div class="col-span-full text-center py-16 text-slate-500">
+                        <i class="fa-solid fa-folder-open text-4xl block mb-3 text-slate-700"></i>
+                        Belum ada undian yang dilakukan. Silakan pergi ke tab <span class="text-purple-400 cursor-pointer underline" onclick="switchTab('tab-kocok')">Arena Utama</span> untuk memulai!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         GIANT CELEBRATION MODAL (INTERACTIVE OVERLAY)
+         ========================================== -->
+    <div id="winner-celebration-modal" class="fixed inset-0 z-50 bg-slate-950/95 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300 backdrop-blur-md">
+        <div class="bg-gradient-to-b from-slate-900 to-purple-950/90 border-2 border-yellow-400/40 max-w-lg w-full rounded-3xl p-8 shadow-2xl text-center transform scale-90 transition-all duration-300 space-y-6 relative overflow-hidden">
+            <!-- Goalpost stadium visual lighting -->
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 16px 16px;"></div>
+            <div class="absolute -left-12 -top-12 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div class="absolute -right-12 -bottom-12 w-40 h-40 bg-yellow-500/10 rounded-full blur-3xl"></div>
+
+            <div class="animate-bounce">
+                <span class="text-5xl">🏆</span>
+            </div>
+
+            <div class="space-y-1">
+                <h4 class="text-xs font-black tracking-widest text-emerald-400 uppercase">SELEBRASI GOL UNDIAN</h4>
+                <h2 class="text-3xl md:text-4xl font-black font-outfit text-white tracking-wide">MATCH TERKUNCI!</h2>
+            </div>
+
+            <!-- Match Card Showcase -->
+            <div class="bg-slate-950/80 border border-slate-800/80 p-6 rounded-2xl space-y-4 shadow-inner relative">
+                <div>
+                    <span id="modal-slot-indicator" class="text-[10px] text-purple-400 font-bold uppercase tracking-widest block mb-1">Peserta Beruntung</span>
+                    <h3 id="modal-winner-name" class="text-2xl md:text-3xl font-extrabold font-outfit text-white break-words uppercase">SINTA BELLA</h3>
+                </div>
+
+                <div class="flex items-center justify-center gap-2">
+                    <div class="h-0.5 bg-gradient-to-r from-transparent to-purple-500/40 flex-1"></div>
+                    <span class="text-xs font-bold text-yellow-400 uppercase font-outfit">MENDAPATKAN</span>
+                    <div class="h-0.5 bg-gradient-to-l from-transparent to-purple-500/40 flex-1"></div>
+                </div>
+
+                <div class="inline-flex items-center gap-3 bg-gradient-to-r from-purple-900/40 to-indigo-900/40 px-6 py-3 rounded-2xl border border-purple-500/30">
+                    <span id="modal-winner-flag" class="text-4xl filter drop-shadow-md">🇲🇽</span>
+                    <span id="modal-winner-country" class="text-lg md:text-2xl font-black text-yellow-400 font-outfit tracking-wide uppercase">MEKSIKO</span>
+                </div>
+            </div>
+
+            <!-- Confirmation Action -->
+            <div class="pt-2">
+                <button onclick="commitAndContinue()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black font-outfit tracking-wider text-base transition-all duration-200 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 pulse-green-btn">
+                    OK, AMBIL KOCOKAN BERIKUTNYA <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal/Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-950 border border-purple-500/30 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center">
+            <i class="fa-solid fa-info"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-xs uppercase tracking-wider text-purple-400">Notifikasi</h4>
+            <p id="toast-message" class="text-xs text-slate-300">Siap mengocok arisan!</p>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog Box for Reset -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 bg-slate-950/80 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-200">
+        <div class="bg-slate-900 border border-slate-800 max-w-sm w-full rounded-3xl p-6 shadow-2xl transform scale-95 transition-all duration-200 space-y-4">
+            <div class="w-12 h-12 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold font-outfit text-slate-100">Apakah Anda Yakin?</h3>
+                <p class="text-xs text-slate-400 mt-1">Tindakan ini akan menghapus semua pasangan yang sudah terbentuk dan mengembalikan semua tim ke dalam roda.</p>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeConfirmModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition font-semibold text-xs">Batal</button>
+                <button onclick="executeReset()" class="flex-1 py-2.5 rounded-xl bg-red-500 text-white hover:bg-red-400 transition font-semibold text-xs">Ya, Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Exact input requested by user
+        const DEFAULT_INPUT_PARTICIPANTS = `mecun : 4
+Ali. T : 2
+Ipul : 2
+Bewok : 2
+Jujun : 2
+Damsek : 2
+Jml/okem : 2
+Erik/okem : 2
+raul : 2
+Butem : 2
+Saddam : 2
+Dandy : 2
+kopet : 2
+Boceng : 2
+iki : 2`;
+
+        const DEFAULT_INPUT_TEAMS = `🇦🇷 Argentina
+🇫🇷 Prancis
+🇧🇷 Brasil
+🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inggris
+🇪🇸 Spanyol
+🇵🇹 Portugal
+🇩🇪 Jerman
+🇳🇱 Belanda
+🇧🇪 Belgia
+🇨🇭 Swiss
+🇭🇷 Kroasia
+🇦🇹 Austria
+🇯🇵 Jepang
+🇲🇦 Maroko
+🇺🇸 Amerika Serikat
+🇲🇽 Meksiko
+🇨🇦 Kanada
+🇿🇦 Afrika Selatan
+🇦🇺 Australia
+🇨🇴 Kolombia
+🇸🇳 Senegal
+🇸🇪 Swedia
+🇳🇴 Norwegia
+🇨🇮 Pantai Gading
+🇧🇦 Bosnia dan Herzegovina
+🇵🇾 Paraguay
+🇪🇨 Ekuador
+🇩🇿 Aljazair
+🇬🇭 Ghana
+🇪🇬 Mesir
+🇨🇩 Republik Demokratik Kongo
+🇨🇻 Tanjung Verde`;
+
+        // Active state variables
+        let participantsData = []; // Array of parsed object: { name: "mecun", count: 4 }
+        let teams = []; // Array of string: ["🇦🇷 Argentina", ...]
+        let results = []; // Array of pairings: { participantSlot: {...}, team: "..." }
+
+        // Step variables
+        let selectedParticipantSlot = null; // Holds the drawn slot: { name, slotIndex, maxSlots, uniqueId }
+        let selectedTeam = null; // Stored temporarily before confirmation OK
+        let isDrawingName = false;
+        let isSpinningWheel = false;
+        let isSoundEnabled = true;
+
+        // Wheel Physics & Animation Variables
+        const canvas = document.getElementById('lucky-wheel');
+        const ctx = canvas.getContext('2d');
+        let currentWheelAngle = 0;
+        let lastLoggedIndex = -1; // For ticks sound
+
+        // On Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadInitialInputs();
+            applyInputsAndReset();
+        });
+
+        // Initialize Forms
+        function loadInitialInputs() {
+            document.getElementById('input-peserta').value = DEFAULT_INPUT_PARTICIPANTS;
+            document.getElementById('input-tim').value = DEFAULT_INPUT_TEAMS;
+            updateCounts();
+        }
+
+        // Apply input inputs and rebuild state arrays
+        function applyInputsAndReset() {
+            const pText = document.getElementById('input-peserta').value.trim();
+            const tText = document.getElementById('input-tim').value.trim();
+
+            // Parse participants
+            const linesP = pText ? pText.split('\n') : [];
+            participantsData = [];
+            linesP.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                let name = trimmed;
+                let count = 1;
+                if (trimmed.includes(':')) {
+                    const parts = trimmed.split(':');
+                    name = parts[0].trim();
+                    count = parseInt(parts[1].trim()) || 1;
+                }
+                participantsData.push({ name, count });
+            });
+
+            // Parse teams
+            teams = tText ? tText.split('\n').filter(t => t.trim() !== '') : [];
+            results = [];
+
+            selectedParticipantSlot = null;
+            selectedTeam = null;
+
+            updateUI();
+            drawWheel();
+        }
+
+        // Tab Navigation Router
+        function switchTab(tabId) {
+            document.getElementById('tab-kocok').classList.add('hidden');
+            document.getElementById('tab-data').classList.add('hidden');
+            document.getElementById('tab-hasil').classList.add('hidden');
+
+            const tabButtons = ['btn-tab-kocok', 'btn-tab-data', 'btn-tab-hasil'];
+            tabButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                btn.className = "flex-1 py-2 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-200";
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.className = "flex-1 py-2 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 bg-purple-600 text-white";
+
+            if (tabId === 'tab-kocok') {
+                setTimeout(drawWheel, 100);
+            }
+        }
+
+        // Live calculation of textareas
+        function updateCounts() {
+            const pText = document.getElementById('input-peserta').value.trim();
+            const tText = document.getElementById('input-tim').value.trim();
+
+            const linesP = pText ? pText.split('\n') : [];
+            let totalSlots = 0;
+            linesP.forEach(line => {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                let count = 1;
+                if (trimmed.includes(':')) {
+                    const parts = trimmed.split(':');
+                    count = parseInt(parts[1].trim()) || 1;
+                }
+                totalSlots += count;
+            });
+
+            const tArray = tText ? tText.split('\n').filter(t => t.trim() !== '') : [];
+
+            document.getElementById('label-count-peserta').innerText = `${totalSlots} Slot`;
+            document.getElementById('label-count-tim').innerText = `${tArray.length} Negara`;
+
+            const warningBox = document.getElementById('data-match-warning');
+            if (totalSlots === tArray.length) {
+                warningBox.className = "text-xs font-semibold text-emerald-400 flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-xl border border-emerald-500/20";
+                warningBox.innerHTML = `<i class="fa-solid fa-circle-check"></i> Jumlah pas setimbang! (${totalSlots} vs ${tArray.length})`;
+            } else {
+                warningBox.className = "text-xs font-semibold text-yellow-400 flex items-center gap-2 bg-yellow-500/10 px-4 py-2.5 rounded-xl border border-yellow-500/20";
+                warningBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Akumulasi Kuota Peserta (${totalSlots}) dan jumlah tim (${tArray.length}) harus sama!`;
+            }
+        }
+
+        // Save Custom Lists from Textarea
+        function simpanPengaturan() {
+            applyInputsAndReset();
+            showToast("Konfigurasi data berhasil disimpan & di-reset!");
+            switchTab('tab-kocok');
+        }
+
+        // Restore Defaults
+        function restoreDefaults() {
+            document.getElementById('input-peserta').value = DEFAULT_INPUT_PARTICIPANTS;
+            document.getElementById('input-tim').value = DEFAULT_INPUT_TEAMS;
+            updateCounts();
+            showToast("Mengembalikan default 15 peserta & 32 tim kontestan!");
+        }
+
+        // Build flat participant list based on slots configuration
+        function getParticipantPool() {
+            const pool = [];
+            participantsData.forEach(p => {
+                for (let i = 1; i <= p.count; i++) {
+                    pool.push({
+                        name: p.name,
+                        slotIndex: i,
+                        maxSlots: p.count,
+                        uniqueId: `${p.name}-${i}`
+                    });
+                }
+            });
+            return pool;
+        }
+
+        // Get Available Lists (Remaining in pool)
+        function getRemainingParticipantSlots() {
+            const pool = getParticipantPool();
+            const drawnIds = results.map(r => r.participantSlot.uniqueId);
+            return pool.filter(p => !drawnIds.includes(p.uniqueId));
+        }
+
+        function getRemainingTeams() {
+            const drawnTeams = results.map(r => r.team);
+            return teams.filter(t => !drawnTeams.includes(t));
+        }
+
+        // Web Audio Synthesizer (No external dependencies)
+        function playSynthSound(type) {
+            if (!isSoundEnabled) return;
+            try {
+                const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+                
+                if (type === 'tick') {
+                    const osc = ctxAudio.createOscillator();
+                    const gain = ctxAudio.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(550, ctxAudio.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(90, ctxAudio.currentTime + 0.05);
+                    gain.gain.setValueAtTime(0.04, ctxAudio.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + 0.05);
+                    osc.connect(gain);
+                    gain.connect(ctxAudio.destination);
+                    osc.start();
+                    osc.stop(ctxAudio.currentTime + 0.05);
+                } 
+                else if (type === 'whistle') {
+                    const osc1 = ctxAudio.createOscillator();
+                    const osc2 = ctxAudio.createOscillator();
+                    const gain = ctxAudio.createGain();
+                    
+                    osc1.type = 'triangle';
+                    osc1.frequency.setValueAtTime(1500, ctxAudio.currentTime);
+                    osc1.frequency.linearRampToValueAtTime(1600, ctxAudio.currentTime + 0.1);
+                    osc1.frequency.linearRampToValueAtTime(1500, ctxAudio.currentTime + 0.25);
+                    
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(1550, ctxAudio.currentTime);
+                    osc2.frequency.linearRampToValueAtTime(1650, ctxAudio.currentTime + 0.1);
+                    osc2.frequency.linearRampToValueAtTime(1550, ctxAudio.currentTime + 0.25);
+                    
+                    gain.gain.setValueAtTime(0.1, ctxAudio.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + 0.35);
+                    
+                    osc1.connect(gain);
+                    osc2.connect(gain);
+                    gain.connect(ctxAudio.destination);
+                    
+                    osc1.start();
+                    osc2.start();
+                    osc1.stop(ctxAudio.currentTime + 0.35);
+                    osc2.stop(ctxAudio.currentTime + 0.35);
+                } 
+                else if (type === 'goal') {
+                    const bufferSize = ctxAudio.sampleRate * 2.0;
+                    const buffer = ctxAudio.createBuffer(1, bufferSize, ctxAudio.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = Math.random() * 2 - 1;
+                    }
+                    
+                    const noise = ctxAudio.createBufferSource();
+                    noise.buffer = buffer;
+                    
+                    const filter = ctxAudio.createBiquadFilter();
+                    filter.type = 'bandpass';
+                    filter.frequency.value = 800;
+                    filter.Q.value = 1.0;
+                    
+                    const gain = ctxAudio.createGain();
+                    gain.gain.setValueAtTime(0.15, ctxAudio.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.3, ctxAudio.currentTime + 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctxAudio.currentTime + 1.5);
+                    
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(ctxAudio.destination);
+                    
+                    noise.start();
+                    noise.stop(ctxAudio.currentTime + 1.5);
+                }
+            } catch (e) {
+                console.log("Audio synthesis blocked or not supported", e);
+            }
+        }
+
+        function toggleSound() {
+            isSoundEnabled = !isSoundEnabled;
+            const soundBtn = document.getElementById('sound-btn');
+            const soundIcon = document.getElementById('sound-icon');
+            if (isSoundEnabled) {
+                soundIcon.className = "fa-solid fa-volume-high";
+                soundBtn.className = "p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-purple-400 border border-purple-500/20 transition-all";
+                showToast("Efek suara diaktifkan!");
+            } else {
+                soundIcon.className = "fa-solid fa-volume-xmark";
+                soundBtn.className = "p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-500 border border-slate-800 transition-all";
+                showToast("Efek suara dimatikan!");
+            }
+        }
+
+        // ==========================================
+        // STEP 1: DRAW NAME (SLOT SHUFFLE)
+        // ==========================================
+        function kocokNamaSaja() {
+            if (isDrawingName || isSpinningWheel) return;
+
+            const remainingP = getRemainingParticipantSlots();
+            if (remainingP.length === 0) {
+                showToast("Semua jatah slot peserta arisan telah dikokok habis!", "warning");
+                return;
+            }
+
+            isDrawingName = true;
+            document.getElementById('btn-kocok-nama').disabled = true;
+            document.getElementById('btn-putar-roda').disabled = true;
+
+            const displayNama = document.getElementById('display-nama');
+            const boxDisplayNama = document.getElementById('box-display-nama');
+            
+            boxDisplayNama.className = "h-32 flex flex-col items-center justify-center bg-slate-950/80 rounded-2xl border-2 neon-border-active p-4 relative shadow-2xl transition-all duration-300";
+
+            let ticks = 24;
+            let currentDelay = 40;
+            const targetSlot = remainingP[Math.floor(Math.random() * remainingP.length)];
+
+            function runShuffle() {
+                if (ticks > 0) {
+                    const tempRandomSlot = remainingP[Math.floor(Math.random() * remainingP.length)];
+                    displayNama.innerHTML = `<span class="block text-2xl font-black">${tempRandomSlot.name}</span><span class="text-xs font-semibold text-purple-400 font-outfit uppercase mt-1">Slot ${tempRandomSlot.slotIndex}/${tempRandomSlot.maxSlots}</span>`;
+                    playSynthSound('tick');
+                    ticks--;
+                    currentDelay += 12;
+                    setTimeout(runShuffle, currentDelay);
+                } else {
+                    selectedParticipantSlot = targetSlot;
+                    displayNama.innerHTML = `<span class="block text-2xl font-black">${selectedParticipantSlot.name}</span><span class="text-xs font-bold text-yellow-400 font-outfit uppercase mt-1">Slot ${selectedParticipantSlot.slotIndex}/${selectedParticipantSlot.maxSlots}</span>`;
+                    playSynthSound('whistle');
+
+                    boxDisplayNama.className = "h-32 flex flex-col items-center justify-center bg-purple-950/40 rounded-2xl border-2 border-purple-500 p-4 relative shadow-2xl transition-all duration-300 neon-glow-purple";
+                    
+                    isDrawingName = false;
+                    document.getElementById('btn-kocok-nama').disabled = true;
+                    
+                    unlockWheelStep();
+                }
+            }
+
+            runShuffle();
+        }
+
+        function unlockWheelStep() {
+            document.getElementById('step-number-badge').innerText = "2";
+            document.getElementById('step-number-badge').className = "w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-lg font-bold font-outfit";
+            document.getElementById('step-instruction-text').innerText = `Langkah 2: Putar Roda untuk ${selectedParticipantSlot.name} (Slot ${selectedParticipantSlot.slotIndex}/${selectedParticipantSlot.maxSlots})!`;
+
+            const btnPutar = document.getElementById('btn-putar-roda');
+            btnPutar.disabled = false;
+            btnPutar.className = "w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 hover:from-yellow-400 hover:to-amber-500 text-slate-950 font-extrabold font-outfit tracking-wider text-base transition-all duration-200 shadow-lg shadow-yellow-500/20 flex items-center justify-center gap-2 pulse-gold-btn cursor-pointer";
+            
+            document.getElementById('badge-langkah-tim').className = "text-xs font-bold text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 animate-pulse";
+            document.getElementById('badge-langkah-nama').className = "text-xs font-bold text-slate-500 bg-slate-800 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5";
+
+            showToast(`Nama ${selectedParticipantSlot.name} terpilih! Putar Roda untuk memilih negaranya.`);
+        }
+
+        // ==========================================
+        // STEP 2: SPINNING WHEEL ENGINE
+        // ==========================================
+        function drawWheel() {
+            const size = canvas.width;
+            const center = size / 2;
+            const radius = center - 12;
+
+            ctx.clearRect(0, 0, size, size);
+
+            // Fetch current active pool remaining
+            const remainingTeams = getRemainingTeams();
+            const numSlices = remainingTeams.length;
+
+            if (numSlices === 0) {
+                ctx.beginPath();
+                ctx.arc(center, center, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#1A1235';
+                ctx.fill();
+                ctx.strokeStyle = '#F59E0B';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+                
+                ctx.fillStyle = '#F59E0B';
+                ctx.font = 'bold 14px Outfit, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText("SEMUA TIM TERKOCOR", center, center);
+                return;
+            }
+
+            const arcAngle = (2 * Math.PI) / numSlices;
+
+            ctx.save();
+            ctx.translate(center, center);
+            ctx.rotate(currentWheelAngle);
+
+            for (let i = 0; i < numSlices; i++) {
+                const angle = i * arcAngle;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, radius, angle, angle + arcAngle);
+                ctx.closePath();
+
+                if (numSlices === 1) {
+                    ctx.fillStyle = '#8B5CF6';
+                } else {
+                    if (i % 3 === 0) ctx.fillStyle = '#6D28D9';      // Deep violet
+                    else if (i % 3 === 1) ctx.fillStyle = '#111827'; // Dark Carbon
+                    else ctx.fillStyle = '#0F766E';                  // Teal field green
+                }
+                ctx.fill();
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.rotate(angle + arcAngle / 2);
+                
+                ctx.fillStyle = '#F8FAFC';
+                
+                let fontSize = 12;
+                if (numSlices > 24) fontSize = 8;
+                else if (numSlices > 16) fontSize = 10;
+                else if (numSlices > 8) fontSize = 11;
+
+                ctx.font = `bold ${fontSize}px 'Outfit', sans-serif`;
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                
+                const teamString = remainingTeams[i];
+                ctx.fillText(teamString, radius - 15, 0);
+                
+                ctx.restore();
+            }
+
+            ctx.restore();
+
+            // External boundary ring
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 5;
+            ctx.stroke();
+
+            // Play ticking sound while rotating
+            const currentPointerIndex = getSliceIndexAtPointer();
+            if (currentPointerIndex !== lastLoggedIndex) {
+                playSynthSound('tick');
+                lastLoggedIndex = currentPointerIndex;
+            }
+        }
+
+        function getSliceIndexAtPointer() {
+            const remainingTeams = getRemainingTeams();
+            const numSlices = remainingTeams.length;
+            if (numSlices === 0) return 0;
+
+            const arcAngle = (2 * Math.PI) / numSlices;
+            
+            // Pointer is at 12 o'clock (1.5 * Math.PI)
+            const normalizedAngle = (1.5 * Math.PI - (currentWheelAngle % (2 * Math.PI))) % (2 * Math.PI);
+            
+            let sliceIndex = Math.floor(normalizedAngle / arcAngle);
+            if (sliceIndex < 0) sliceIndex += numSlices;
+            return sliceIndex % numSlices;
+        }
+
+        // Exact Landing Math-based Spin
+        function putarRodaNegara() {
+            if (isSpinningWheel || isDrawingName || !selectedParticipantSlot) return;
+
+            const remainingT = getRemainingTeams();
+            if (remainingT.length === 0) {
+                showToast("Daftar tim sudah habis!", "warning");
+                return;
+            }
+
+            isSpinningWheel = true;
+            document.getElementById('btn-putar-roda').disabled = true;
+            document.getElementById('btn-putar-roda').className = "w-full py-4 px-6 rounded-2xl bg-slate-800 text-slate-500 font-extrabold font-outfit tracking-wider text-base transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed";
+
+            // Select index target BEFORE spin
+            const targetIndex = Math.floor(Math.random() * remainingT.length);
+            selectedTeam = remainingT[targetIndex];
+
+            // Wheel physics target landing math
+            const arcAngle = (2 * Math.PI) / remainingT.length;
+            const targetSliceMiddle = (targetIndex + 0.5) * arcAngle;
+            
+            // Align middle of target slice with pointer at top (1.5 * Math.PI)
+            const baseAngle = 1.5 * Math.PI - targetSliceMiddle;
+            
+            // Make 6 full revolutions + the base angle offset
+            const totalRotation = baseAngle + (2 * Math.PI * 6);
+            
+            const startAngle = currentWheelAngle % (2 * Math.PI);
+            const targetAngle = totalRotation;
+            
+            const duration = 5500; // 5.5 seconds spin duration
+            let startTime = null;
+
+            playSynthSound('whistle');
+
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Cubic deceleration curve (Ease-out)
+                const ease = 1 - Math.pow(1 - progress, 3);
+                currentWheelAngle = startAngle + (targetAngle - startAngle) * ease;
+
+                drawWheel();
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // Fully stopped. Guarantee exact position alignment
+                    currentWheelAngle = targetAngle;
+                    drawWheel();
+
+                    isSpinningWheel = false;
+
+                    // Trigger Winning Celebrations
+                    playSynthSound('goal');
+                    startConfetti();
+                    
+                    // Show Celebration Modal Overlay
+                    triggerWinnerCelebrationModal();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Show the high-impact Modal Overlay
+        function triggerWinnerCelebrationModal() {
+            const modal = document.getElementById('winner-celebration-modal');
+            const nameEl = document.getElementById('modal-winner-name');
+            const flagEl = document.getElementById('modal-winner-flag');
+            const countryEl = document.getElementById('modal-winner-country');
+            const slotEl = document.getElementById('modal-slot-indicator');
+
+            nameEl.innerText = selectedParticipantSlot.name;
+            slotEl.innerText = `PESERTA BERUNTUNG (SLOT ${selectedParticipantSlot.slotIndex} DARI ${selectedParticipantSlot.maxSlots})`;
+            
+            // Split flag emoji and country name
+            const splitTeam = selectedTeam.split(' ');
+            flagEl.innerText = splitTeam[0];
+            countryEl.innerText = splitTeam.slice(1).join(' ');
+
+            modal.classList.add('modal-active');
+        }
+
+        // Commit Pairing Result to DB upon OK Button Press
+        function commitAndContinue() {
+            // Push Pairing officially to the active table
+            results.push({
+                participantSlot: selectedParticipantSlot,
+                team: selectedTeam
+            });
+
+            // Dismiss Modal nicely
+            const modal = document.getElementById('winner-celebration-modal');
+            modal.classList.remove('modal-active');
+
+            // Reset temp variables
+            selectedParticipantSlot = null;
+            selectedTeam = null;
+
+            // Update entire system and only now re-render/shrink slices from the wheel
+            updateUI();
+            drawWheel();
+
+            // Reset UI step panels back to starting Step 1
+            resetButtonsToStep1();
+            showToast("Kocokan sukses dikunci! Siap untuk undian berikutnya.");
+        }
+
+        function resetButtonsToStep1() {
+            document.getElementById('step-number-badge').innerText = "1";
+            document.getElementById('step-number-badge').className = "w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg font-bold font-outfit";
+            document.getElementById('step-instruction-text').innerText = "Kocok Nama Peserta Terlebih Dahulu";
+
+            const btnKocok = document.getElementById('btn-kocok-nama');
+            btnKocok.disabled = false;
+
+            const btnPutar = document.getElementById('btn-putar-roda');
+            btnPutar.disabled = true;
+            btnPutar.className = "w-full py-4 px-6 rounded-2xl bg-slate-800 text-slate-500 font-extrabold font-outfit tracking-wider text-base transition-all duration-200 flex items-center justify-center gap-2 cursor-not-allowed";
+            btnPutar.classList.remove('pulse-gold-btn');
+
+            document.getElementById('badge-langkah-nama').className = "text-xs font-bold text-purple-400 bg-purple-500/10 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5";
+            document.getElementById('badge-langkah-tim').className = "text-xs font-bold text-slate-500 bg-slate-800 px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 animate-none";
+        }
+
+        // ==========================================
+        // UI RENDERING FEED & OUTPUTS
+        // ==========================================
+        function updateUI() {
+            const total = getParticipantPool().length;
+            const remaining = getRemainingTeams();
+
+            document.getElementById('stat-sisa-tim').innerText = `${remaining.length} / ${total}`;
+            document.getElementById('final-total-count').innerText = total;
+
+            if (!selectedParticipantSlot) {
+                document.getElementById('display-nama').innerText = "SIAP DIKOCOK";
+                document.getElementById('display-nama').className = "text-2xl md:text-3xl font-black font-outfit text-slate-400 tracking-wide text-center uppercase break-all";
+                document.getElementById('box-display-nama').className = "h-32 flex flex-col items-center justify-center bg-slate-950/80 rounded-2xl border-2 border-slate-800 p-4 relative shadow-2xl transition-all duration-300";
+            }
+
+            renderRecentFeed();
+            renderFinalResults();
+        }
+
+        function renderRecentFeed() {
+            const container = document.getElementById('recent-feed-container');
+            const searchVal = document.getElementById('recent-search').value.toLowerCase();
+
+            const filtered = results.filter(r => r.participantSlot.name.toLowerCase().includes(searchVal));
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center text-xs text-slate-500 py-6">
+                        Belum ada hasil kocokan terkini.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            for (let i = filtered.length - 1; i >= 0; i--) {
+                const item = filtered[i];
+                html += `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/40 border border-slate-800/80 hover:border-purple-500/30 transition-all">
+                        <div class="truncate pr-2">
+                            <span class="block text-[9px] uppercase font-bold text-slate-500">Kocokan #${results.indexOf(item) + 1} - Slot ${item.participantSlot.slotIndex}/${item.participantSlot.maxSlots}</span>
+                            <span class="font-bold text-slate-200 text-xs truncate block">${item.participantSlot.name}</span>
+                        </div>
+                        <div class="bg-slate-900 px-2 py-1.5 rounded-lg border border-slate-800 flex items-center gap-1.5 flex-shrink-0 text-xs">
+                            <span>${item.team.split(' ')[0]}</span>
+                            <span class="font-extrabold text-yellow-400 font-outfit">${item.team.split(' ').slice(1).join(' ')}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function filterRecentFeed() {
+            renderRecentFeed();
+        }
+
+        function renderFinalResults() {
+            const container = document.getElementById('results-grid');
+            const searchVal = document.getElementById('final-results-search').value.toLowerCase();
+
+            const filtered = results.filter(r => 
+                r.participantSlot.name.toLowerCase().includes(searchVal) || 
+                r.team.toLowerCase().includes(searchVal)
+            );
+
+            document.getElementById('final-results-count').innerText = filtered.length;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 text-slate-500">
+                        <i class="fa-solid fa-folder-open text-4xl block mb-3 text-slate-700"></i>
+                        Belum ada hasil pencocokan yang ditemukan.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach((item, index) => {
+                const origIndex = results.indexOf(item) + 1;
+                html += `
+                    <div class="relative overflow-hidden bg-slate-950/60 border border-slate-800 hover:border-purple-500/30 rounded-2xl p-4 transition duration-200 flex flex-col justify-between">
+                        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 12px 12px;"></div>
+                        
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[9px] uppercase font-bold tracking-wider text-slate-500">Kocokan #${origIndex}</span>
+                            <span class="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full font-bold">MATCHED</span>
+                        </div>
+
+                        <div class="space-y-3 mb-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[10px]">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div class="truncate">
+                                    <span class="font-extrabold text-slate-200 truncate text-sm block leading-none">${item.participantSlot.name}</span>
+                                    <span class="text-[10px] text-slate-400 font-semibold font-outfit uppercase mt-0.5 inline-block">Slot ${item.participantSlot.slotIndex}/${item.participantSlot.maxSlots}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="h-px bg-slate-800/80 my-1"></div>
+                            
+                            <div class="flex items-center gap-3 bg-slate-900/60 p-2 rounded-xl border border-slate-800">
+                                <span class="text-2xl">${item.team.split(' ')[0]}</span>
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] text-slate-400 font-semibold uppercase">Negara</span>
+                                    <span class="text-xs font-black text-yellow-400 font-outfit uppercase">${item.team.split(' ').slice(1).join(' ')}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function filterFinalResults() {
+            renderFinalResults();
+        }
+
+        function copyToClipboard() {
+            if (results.length === 0) {
+                showToast("Belum ada data untuk disalin!", "warning");
+                return;
+            }
+
+            let text = "🏆 HASIL KOCOKAN RESMI ARISAN PIALA DUNIA 2026 🏆\n";
+            text += "=================================================\n\n";
+            
+            results.forEach((r, idx) => {
+                text += `${idx + 1}. ${r.participantSlot.name} (Slot ${r.participantSlot.slotIndex}/${r.participantSlot.maxSlots}) ➔ ${r.team}\n`;
+            });
+            
+            text += "\n=================================================\n";
+            text += "Diundi adil menggunakan Roda Keberuntungan Piala Dunia 2026.";
+
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const success = document.execCommand('copy');
+                if (success) {
+                    showToast("Hasil arisan disalin ke clipboard!");
+                } else {
+                    showToast("Gagal menyalin hasil.", "error");
+                }
+            } catch (err) {
+                showToast("Terjadi kesalahan: " + err, "error");
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        function downloadResultsText() {
+            if (results.length === 0) {
+                showToast("Belum ada data untuk diunduh!", "warning");
+                return;
+            }
+
+            let text = "🏆 HASIL KOCOKAN RESMI ARISAN PIALA DUNIA 2026 🏆\r\n";
+            text += "=================================================\r\n\r\n";
+            
+            results.forEach((r, idx) => {
+                text += `${idx + 1}. ${r.participantSlot.name} (Slot ${r.participantSlot.slotIndex}/${r.participantSlot.maxSlots}) ➔ ${r.team}\r\n`;
+            });
+            
+            text += "\r\n=================================================\r\n";
+            text += "Diundi otomatis via Roda Piala Dunia 2026.";
+
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "Arisan_Piala_Dunia_2026.txt";
+            document.body.appendChild(a);
+            a.click();
+            
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+
+            showToast("Daftar TXT berhasil diunduh!");
+        }
+
+        function showToast(message, type = "success") {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = message;
+
+            if (type === "error") {
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-slate-950 border border-red-500/30 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm";
+            } else if (type === "warning") {
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-slate-950 border border-yellow-500/30 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm";
+            } else {
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-0 opacity-100 transition-all duration-300 bg-slate-950 border border-purple-500/30 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm";
+            }
+
+            setTimeout(() => {
+                toast.className = "fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-950 border border-purple-500/30 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 max-w-sm pointer-events-none";
+            }, 3500);
+        }
+
+        function resetArisan() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('pointer-events-none');
+            modal.classList.remove('opacity-0');
+            modal.firstElementChild.classList.remove('scale-95');
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('pointer-events-none');
+            modal.classList.add('opacity-0');
+            modal.firstElementChild.classList.add('scale-95');
+        }
+
+        function executeReset() {
+            results = [];
+            selectedParticipantSlot = null;
+            selectedTeam = null;
+
+            closeConfirmModal();
+            resetButtonsToStep1();
+            updateUI();
+            drawWheel();
+
+            showToast("Semua hasil kocokan berhasil dikosongkan kembali!");
+        }
+
+        // ==========================================
+        // CONFETTI FALLING PARTICLE ALGORITHM
+        // ==========================================
+        const confCanvas = document.getElementById("confetti-canvas");
+        const confCtx = confCanvas.getContext("2d");
+        let confettiArray = [];
+        let animationFrameId;
+
+        function resizeConfettiCanvas() {
+            confCanvas.width = window.innerWidth;
+            confCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas();
+
+        class ConfettiParticle {
+            constructor() {
+                this.x = Math.random() * confCanvas.width;
+                this.y = Math.random() * -confCanvas.height - 20;
+                this.size = Math.random() * 8 + 6;
+                this.color = this.getRandomColor();
+                this.speedY = Math.random() * 3 + 4;
+                this.speedX = Math.random() * 4 - 2;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+            }
+
+            getRandomColor() {
+                const colors = ['#A855F7', '#EC4899', '#10B981', '#F59E0B', '#3B82F6', '#EF4444'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+            }
+
+            draw() {
+                confCtx.save();
+                confCtx.translate(this.x, this.y);
+                confCtx.rotate((this.rotation * Math.PI) / 180);
+                confCtx.fillStyle = this.color;
+                confCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                confCtx.restore();
+            }
+        }
+
+        function startConfetti() {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            confettiArray = [];
+            for (let i = 0; i < 150; i++) {
+                confettiArray.push(new ConfettiParticle());
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+            let active = false;
+
+            confettiArray.forEach(p => {
+                p.update();
+                p.draw();
+                if (p.y < confCanvas.height) active = true;
+            });
+
+            if (active) {
+                animationFrameId = requestAnimationFrame(animateConfetti);
+            } else {
+                confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+            }
+        }
+    </script>
+</body>
+</html>
+
+```
